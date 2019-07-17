@@ -90,14 +90,30 @@ def make_text(chains):
     key_words = [pairs for pairs in chains.keys()] 
 
     # randomly chooses starting point from key_words list
+    starting_point = choice(key_words) 
+    values = chains[starting_point]
 
-    for item in chains:
+    next_word = choice(values)
 
-        starting_point = choice(key_words) 
-        value = chains[starting_point]
+    while True:
 
-        next_word = choice(value)
-        words = [starting_point[0], starting_point[1], next_word]
+        if words == []: # if words is empty add starting point to begin the choin
+            word_1,word_2 = starting_point
+
+            words.append(word_1)
+            words.append(word_2)
+            words.append (next_word)
+    
+        else:   
+            word_1, word_2 = words[-2:] # unpack tuple of last two words in words list
+
+            if (word_1, word_2) in chains: # if tuple in chains dict append next word
+                next_word = choice(chains[(word_1,word_2)])                
+                words.append (next_word)    # append next word to words list
+
+            else:
+                break
+
 
 
 
@@ -105,7 +121,7 @@ def make_text(chains):
     return " ".join(words)
 
 
-input_path = "green_eggs.txt"
+input_path = "green-eggs.txt"
 
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
